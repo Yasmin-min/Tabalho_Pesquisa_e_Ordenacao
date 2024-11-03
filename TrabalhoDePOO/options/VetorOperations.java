@@ -2,6 +2,9 @@ package options;
 import java.io.*;
 import java.util.*;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 public class VetorOperations {
     static VetorOperations vetorOperations = new VetorOperations();
     static Scanner scanner = new Scanner(System.in);
@@ -35,8 +38,8 @@ public class VetorOperations {
     }
 
     public void lerArquivo() throws IOException {
-        System.out.print("Informe o nome do arquivo: ");
-        String nomeArquivo = scanner.next();
+        System.out.print("Carregar o arquivo: ");
+        String nomeArquivo = selecionarArquivo();
 
         try (BufferedReader br = new BufferedReader(new FileReader(nomeArquivo))) {
             List<Integer> lista = new ArrayList<>();
@@ -46,6 +49,21 @@ public class VetorOperations {
             }
             vetorOriginal = lista.stream().mapToInt(i -> i).toArray();
             System.out.println("Vetor carregado do arquivo.");
+
+           
+            
+           if (vetorOriginal.length <= 200) {
+                System.out.println("Exibir vetor:");
+                System.out.print("Vetor=[ ");
+                
+                for (int item:vetorOriginal) {
+                    System.out.print(item + ", ");
+                }
+                System.out.print(" ]");
+           } else {
+                System.out.println("Vetor muito grande para exibir. Tamanho: " + vetorOriginal.length);
+           }
+
         } catch (FileNotFoundException e) {
             System.out.println("Arquivo não encontrado.");
         } catch (IOException e) {
@@ -70,4 +88,17 @@ public class VetorOperations {
         Arrays.sort(vetorOrdenado);
         System.out.println("Vetor temporário foi ordenado.");
     }
+
+    public static String selecionarArquivo() {
+		JFileChooser fileChooser = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivos de Texto", "txt");
+		fileChooser.setFileFilter(filter);
+		
+		int returnValue = fileChooser.showOpenDialog(null);
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = fileChooser.getSelectedFile();
+			return selectedFile.getAbsolutePath();
+		}
+		return null;
+	}
 }
